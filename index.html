@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0f0d18">
   <title>Генератор идей для постов</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,29 +14,131 @@
     }
 
     :root {
-      --ink: #14121f;
-      --ink-soft: #3d3750;
-      --surface: rgba(255, 255, 255, 0.72);
-      --surface-border: rgba(255, 255, 255, 0.55);
       --accent: #6c5ce7;
       --accent-glow: rgba(108, 92, 231, 0.35);
       --coral: #ff6b6b;
       --mint: #26de81;
     }
 
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --app-bg: #0f0d18;
+      --app-bg-elevated: #16132a;
+      --ink: #f4f2fa;
+      --ink-soft: rgba(244, 242, 250, 0.72);
+      --surface: rgba(30, 26, 48, 0.75);
+      --surface-border: rgba(255, 255, 255, 0.1);
+      --item-bg: rgba(255, 255, 255, 0.06);
+      --item-border: rgba(255, 255, 255, 0.1);
+      --title-from: #ffffff;
+      --title-to: #b8b0d8;
+      --switch-track: rgba(255, 255, 255, 0.1);
+      --switch-active: rgba(255, 255, 255, 0.14);
+      --blob-1: linear-gradient(135deg, #6c5ce7, #a29bfe);
+      --blob-2: linear-gradient(135deg, #fd79a8, #e17055);
+      --blob-3: linear-gradient(135deg, #00cec9, #55efc4);
+      --blob-opacity-1: 0.5;
+      --blob-opacity-2: 0.45;
+      --blob-opacity-3: 0.35;
+      --cta-bar-bg: linear-gradient(to top, rgba(15, 13, 24, 0.96), rgba(15, 13, 24, 0.78) 45%, transparent);
+      --shadow-card: 0 4px 32px rgba(0, 0, 0, 0.35);
+      --btn-text: #fff;
+    }
+
+    [data-theme="light"] {
+      color-scheme: light;
+      --app-bg: #ece8f5;
+      --app-bg-elevated: #ffffff;
+      --ink: #1a1528;
+      --ink-soft: #4a4370;
+      --surface: rgba(255, 255, 255, 0.82);
+      --surface-border: rgba(255, 255, 255, 0.95);
+      --item-bg: rgba(255, 255, 255, 0.92);
+      --item-border: rgba(108, 92, 231, 0.12);
+      --title-from: #1a1528;
+      --title-to: #5c5478;
+      --switch-track: rgba(26, 21, 40, 0.08);
+      --switch-active: #fff;
+      --blob-1: linear-gradient(135deg, #a29bfe, #dfe6ff);
+      --blob-2: linear-gradient(135deg, #fab1a0, #ffeaa7);
+      --blob-3: linear-gradient(135deg, #81ecec, #b8f0e0);
+      --blob-opacity-1: 0.55;
+      --blob-opacity-2: 0.5;
+      --blob-opacity-3: 0.45;
+      --cta-bar-bg: linear-gradient(to top, rgba(236, 232, 245, 0.97), rgba(236, 232, 245, 0.85) 40%, transparent);
+      --shadow-card: 0 8px 40px rgba(108, 92, 231, 0.12);
+      --btn-text: #fff;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
+      min-height: 100dvh;
       font-family: "DM Sans", system-ui, sans-serif;
       line-height: 1.55;
       color: var(--ink);
-      padding: clamp(1.5rem, 4vw, 3rem) 1.25rem;
       overflow-x: hidden;
       position: relative;
-      background: #0f0d18;
+      background: var(--app-bg);
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* Живой градиентный фон */
+    .app {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .top-bar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 1rem 1.25rem 0;
+    }
+
+    .theme-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 3px;
+      border-radius: 999px;
+      background: var(--switch-track);
+      border: 1px solid var(--surface-border);
+      box-shadow: var(--shadow-card);
+    }
+
+    .theme-switch__btn {
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      padding: 0.45rem 0.75rem;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      color: var(--ink-soft);
+      background: transparent;
+      transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease;
+    }
+
+    .theme-switch__btn[aria-pressed="true"] {
+      background: var(--switch-active);
+      color: var(--ink);
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-theme="dark"] .theme-switch__btn[aria-pressed="true"] {
+      box-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .theme-switch__btn:active {
+      transform: scale(0.96);
+    }
+
     .bg-blobs {
       position: fixed;
       inset: 0;
@@ -48,37 +151,38 @@
       position: absolute;
       border-radius: 50%;
       filter: blur(80px);
-      opacity: 0.55;
       animation: blob-float 18s ease-in-out infinite;
     }
 
     .bg-blobs span:nth-child(1) {
       width: min(55vw, 420px);
       height: min(55vw, 420px);
-      background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+      background: var(--blob-1);
       top: -10%;
       left: -15%;
+      opacity: var(--blob-opacity-1);
       animation-delay: 0s;
     }
 
     .bg-blobs span:nth-child(2) {
       width: min(45vw, 380px);
       height: min(45vw, 380px);
-      background: linear-gradient(135deg, #fd79a8, #e17055);
+      background: var(--blob-2);
       bottom: -5%;
       right: -10%;
+      opacity: var(--blob-opacity-2);
       animation-delay: -6s;
     }
 
     .bg-blobs span:nth-child(3) {
       width: min(40vw, 320px);
       height: min(40vw, 320px);
-      background: linear-gradient(135deg, #00cec9, #55efc4);
-      top: 40%;
+      background: var(--blob-3);
+      top: 42%;
       left: 50%;
       transform: translate(-50%, -50%);
+      opacity: var(--blob-opacity-3);
       animation-delay: -12s;
-      opacity: 0.4;
     }
 
     @keyframes blob-float {
@@ -106,20 +210,29 @@
       }
     }
 
-    main {
+    .app-main {
       position: relative;
       z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 0 1.25rem 1.25rem;
       max-width: 32rem;
+      width: 100%;
       margin: 0 auto;
+    }
+
+    .app-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       background: var(--surface);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       padding: clamp(1.75rem, 4vw, 2.5rem);
       border-radius: 20px;
       border: 1px solid var(--surface-border);
-      box-shadow:
-        0 4px 24px rgba(0, 0, 0, 0.12),
-        0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+      box-shadow: var(--shadow-card);
       animation: card-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       opacity: 0;
       transform: translateY(20px) scale(0.98);
@@ -133,13 +246,13 @@
     }
 
     h1 {
-      margin: 0 0 1.75rem;
+      margin: 0 0 1.5rem;
       font-family: "Outfit", sans-serif;
       font-size: clamp(1.65rem, 4vw, 2rem);
       font-weight: 700;
       letter-spacing: -0.03em;
       line-height: 1.2;
-      background: linear-gradient(120deg, var(--ink) 0%, #4a4370 100%);
+      background: linear-gradient(120deg, var(--title-from), var(--title-to));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -169,13 +282,13 @@
       gap: 0.65rem;
     }
 
-    li {
+    #idea-list li {
       margin: 0;
       padding: 1rem 1rem 1rem 3.25rem;
       position: relative;
-      background: rgba(255, 255, 255, 0.55);
+      background: var(--item-bg);
       border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--item-border);
       color: var(--ink-soft);
       font-weight: 500;
       font-size: 0.95rem;
@@ -185,21 +298,48 @@
         box-shadow 0.35s ease,
         border-color 0.35s ease,
         background 0.35s ease;
+    }
+
+    #idea-list:not(.ideas-settled) li {
       opacity: 0;
       transform: translateX(-12px);
       animation: item-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
 
-    li:nth-child(1) {
+    #idea-list:not(.ideas-settled) li:nth-child(1) {
       animation-delay: 0.45s;
     }
 
-    li:nth-child(2) {
+    #idea-list:not(.ideas-settled) li:nth-child(2) {
       animation-delay: 0.58s;
     }
 
-    li:nth-child(3) {
+    #idea-list:not(.ideas-settled) li:nth-child(3) {
       animation-delay: 0.71s;
+    }
+
+    #idea-list.ideas-settled li {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+
+    #idea-list.ideas-replaying li {
+      opacity: 0;
+      transform: translateX(-12px);
+      animation: item-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    #idea-list.ideas-replaying li:nth-child(1) {
+      animation-delay: 0.08s;
+    }
+
+    #idea-list.ideas-replaying li:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    #idea-list.ideas-replaying li:nth-child(3) {
+      animation-delay: 0.32s;
     }
 
     @keyframes item-in {
@@ -209,7 +349,23 @@
       }
     }
 
-    li::before {
+    @keyframes item-pulse {
+      0% {
+        box-shadow: 0 0 0 0 var(--accent-glow);
+      }
+      70% {
+        box-shadow: 0 0 0 10px transparent;
+      }
+      100% {
+        box-shadow: 0 0 0 0 transparent;
+      }
+    }
+
+    #idea-list li.pulse-once {
+      animation: item-pulse 0.85s ease-out forwards !important;
+    }
+
+    #idea-list li::before {
       content: "";
       position: absolute;
       left: 1rem;
@@ -223,72 +379,397 @@
       transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
     }
 
-    li:nth-child(2)::before {
+    #idea-list li:nth-child(2)::before {
       background: var(--coral);
       box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.35);
     }
 
-    li:nth-child(3)::before {
+    #idea-list li:nth-child(3)::before {
       background: var(--mint);
       box-shadow: 0 0 0 3px rgba(38, 222, 129, 0.35);
     }
 
-    li:hover {
-      transform: translateX(6px) scale(1.01);
-      box-shadow:
-        0 12px 32px rgba(108, 92, 231, 0.12),
-        0 0 0 1px rgba(108, 92, 231, 0.15);
-      border-color: rgba(108, 92, 231, 0.25);
-      background: rgba(255, 255, 255, 0.9);
-    }
-
-    li:hover::before {
-      transform: translateY(-50%) scale(1.25);
-      box-shadow: 0 0 0 6px var(--accent-glow);
-    }
-
-    li:nth-child(2):hover::before {
-      box-shadow: 0 0 0 6px rgba(255, 107, 107, 0.35);
-    }
-
-    li:nth-child(3):hover::before {
-      box-shadow: 0 0 0 6px rgba(38, 222, 129, 0.35);
-    }
-
-    /* Уважение к настройкам доступности */
-    @media (prefers-reduced-motion: reduce) {
-      .bg-blobs span,
-      main,
-      h1,
-      li {
-        animation: none !important;
-        opacity: 1;
-        transform: none;
+    @media (hover: hover) {
+      #idea-list li:hover {
+        transform: translateX(6px) scale(1.01);
+        box-shadow:
+          0 12px 32px rgba(108, 92, 231, 0.15),
+          0 0 0 1px rgba(108, 92, 231, 0.2);
+        border-color: rgba(108, 92, 231, 0.28);
       }
 
-      li {
+      [data-theme="light"] #idea-list li:hover {
+        box-shadow:
+          0 12px 28px rgba(108, 92, 231, 0.12),
+          0 0 0 1px rgba(108, 92, 231, 0.18);
+      }
+
+      #idea-list li:hover::before {
+        transform: translateY(-50%) scale(1.25);
+        box-shadow: 0 0 0 6px var(--accent-glow);
+      }
+
+      #idea-list li:nth-child(2):hover::before {
+        box-shadow: 0 0 0 6px rgba(255, 107, 107, 0.35);
+      }
+
+      #idea-list li:nth-child(3):hover::before {
+        box-shadow: 0 0 0 6px rgba(38, 222, 129, 0.35);
+      }
+    }
+
+    .cta-wrap {
+      position: relative;
+      z-index: 2;
+      padding: 1rem 0 0;
+      margin-top: auto;
+    }
+
+    .btn-generate {
+      --btn-shine: rgba(255, 255, 255, 0.25);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      min-height: 3.25rem;
+      padding: 0.85rem 1.5rem;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--btn-text);
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      overflow: hidden;
+      background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 50%, #6c5ce7 100%);
+      background-size: 200% 200%;
+      box-shadow:
+        0 4px 20px var(--accent-glow),
+        0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+      animation: btn-gradient-shift 4s ease infinite;
+    }
+
+    @keyframes btn-gradient-shift {
+      0%, 100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    .btn-generate::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        transparent 0%,
+        transparent 40%,
+        var(--btn-shine) 50%,
+        transparent 60%,
+        transparent 100%
+      );
+      background-size: 200% 100%;
+      animation: btn-shimmer 2.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes btn-shimmer {
+      0% {
+        background-position: 100% 0;
+      }
+      100% {
+        background-position: -100% 0;
+      }
+    }
+
+    .btn-generate:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow:
+        0 8px 28px rgba(108, 92, 231, 0.45),
+        0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+    }
+
+    .btn-generate:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .btn-generate:disabled {
+      cursor: wait;
+      animation: none;
+      opacity: 0.88;
+    }
+
+    .btn-generate__spinner {
+      width: 1.15rem;
+      height: 1.15rem;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+      flex-shrink: 0;
+      opacity: 0;
+      width: 0;
+      margin: 0;
+      overflow: hidden;
+      transition: opacity 0.2s ease, width 0.2s ease, margin 0.2s ease;
+    }
+
+    .btn-generate.is-loading .btn-generate__spinner {
+      opacity: 1;
+      width: 1.15rem;
+      margin-right: 0;
+    }
+
+    .btn-generate.is-loading .btn-generate__label {
+      opacity: 0.9;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes btn-pop {
+      0% {
+        transform: scale(1);
+      }
+      40% {
+        transform: scale(1.04);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .btn-generate.just-ran {
+      animation: btn-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), btn-gradient-shift 4s ease infinite;
+    }
+
+    /* ——— Мобильный «приложенческий» вид ——— */
+    @media (max-width: 540px) {
+      .top-bar {
+        position: sticky;
+        top: 0;
+        padding: max(0.65rem, env(safe-area-inset-top, 0px)) 1rem 0.5rem;
+        background: var(--cta-bar-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .app-main {
+        flex: 1;
+        padding: 0.5rem 0.75rem 0;
+        max-width: none;
+      }
+
+      .app-card {
+        flex: 1;
+        border-radius: 22px;
+        padding: 1.35rem 1.1rem 1.1rem;
+        min-height: 0;
+      }
+
+      h1 {
+        font-size: 1.45rem;
+        margin-bottom: 1.15rem;
+      }
+
+      #idea-list li {
+        padding: 1.05rem 1rem 1.05rem 3.15rem;
+        font-size: 0.9375rem;
+        border-radius: 16px;
+      }
+
+      .cta-wrap {
+        position: sticky;
+        bottom: 0;
+        margin-top: 0;
+        padding: 0.75rem 0.75rem max(0.85rem, env(safe-area-inset-bottom, 0px));
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+        width: calc(100% + 1.5rem);
+        background: var(--cta-bar-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid var(--surface-border);
+      }
+
+      .btn-generate {
+        min-height: 3.35rem;
+        border-radius: 16px;
+        font-size: 1.02rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bg-blobs span,
+      .app-card,
+      h1,
+      #idea-list li,
+      .btn-generate,
+      .btn-generate::before,
+      .btn-generate__spinner {
+        animation: none !important;
+      }
+
+      .app-card,
+      h1,
+      #idea-list li {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+
+      #idea-list li {
         transition: none;
       }
 
-      li:hover {
-        transform: none;
+      .btn-generate.is-loading .btn-generate__spinner {
+        animation: spin 0.65s linear infinite;
       }
     }
   </style>
 </head>
 <body>
-  <div class="bg-blobs" aria-hidden="true">
-    <span></span>
-    <span></span>
-    <span></span>
+  <div class="app">
+    <header class="top-bar">
+      <div class="theme-switch" role="group" aria-label="Тема оформления">
+        <button type="button" class="theme-switch__btn" id="theme-light" aria-pressed="false" data-theme-set="light">
+          Светлая
+        </button>
+        <button type="button" class="theme-switch__btn" id="theme-dark" aria-pressed="true" data-theme-set="dark">
+          Тёмная
+        </button>
+      </div>
+    </header>
+
+    <div class="bg-blobs" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <div class="app-main">
+      <main class="app-card">
+        <h1>Генератор идей для постов</h1>
+        <ul id="idea-list">
+          <li>5 идей постов для экспертов</li>
+          <li>3 идеи сторис на сегодня</li>
+          <li>контент план на неделю</li>
+        </ul>
+        <div class="cta-wrap">
+          <button type="button" class="btn-generate" id="btn-generate" aria-busy="false">
+            <span class="btn-generate__spinner" aria-hidden="true"></span>
+            <span class="btn-generate__label">Сгенерировать идеи</span>
+          </button>
+        </div>
+      </main>
+    </div>
   </div>
-  <main>
-    <h1>Генератор идей для постов</h1>
-    <ul>
-      <li>5 идей постов для экспертов</li>
-      <li>3 идеи сторис на сегодня</li>
-      <li>контент план на неделю</li>
-    </ul>
-  </main>
+
+  <script>
+    (function () {
+      var STORAGE_KEY = "idea-gen-theme";
+      var root = document.documentElement;
+      var metaTheme = document.querySelector('meta[name="theme-color"]');
+      var btnLight = document.getElementById("theme-light");
+      var btnDark = document.getElementById("theme-dark");
+      var ideaList = document.getElementById("idea-list");
+      var btnGen = document.getElementById("btn-generate");
+
+      function themeColor() {
+        return root.getAttribute("data-theme") === "light" ? "#ece8f5" : "#0f0d18";
+      }
+
+      function applyTheme(theme) {
+        root.setAttribute("data-theme", theme);
+        try {
+          localStorage.setItem(STORAGE_KEY, theme);
+        } catch (e) {}
+        if (metaTheme) {
+          metaTheme.setAttribute("content", themeColor());
+        }
+        btnLight.setAttribute("aria-pressed", theme === "light" ? "true" : "false");
+        btnDark.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+      }
+
+      function initTheme() {
+        var stored = null;
+        try {
+          stored = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {}
+        if (stored === "light" || stored === "dark") {
+          applyTheme(stored);
+          return;
+        }
+        applyTheme(window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+      }
+
+      btnLight.addEventListener("click", function () {
+        applyTheme("light");
+      });
+      btnDark.addEventListener("click", function () {
+        applyTheme("dark");
+      });
+
+      initTheme();
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        ideaList.classList.add("ideas-settled");
+      } else {
+        window.setTimeout(function () {
+          ideaList.classList.add("ideas-settled");
+        }, 1400);
+      }
+
+      function replayListAnimation() {
+        ideaList.querySelectorAll("li").forEach(function (el) {
+          el.classList.remove("pulse-once");
+        });
+        ideaList.classList.remove("ideas-settled");
+        ideaList.classList.add("ideas-replaying");
+        void ideaList.offsetWidth;
+
+        ideaList.querySelectorAll("li").forEach(function (el, i) {
+          window.setTimeout(function () {
+            el.classList.add("pulse-once");
+          }, 820 + i * 100);
+        });
+
+        window.setTimeout(function () {
+          ideaList.classList.remove("ideas-replaying");
+          ideaList.classList.add("ideas-settled");
+        }, 1050);
+
+        window.setTimeout(function () {
+          ideaList.querySelectorAll("li").forEach(function (el) {
+            el.classList.remove("pulse-once");
+          });
+        }, 2000);
+      }
+
+      btnGen.addEventListener("click", function () {
+        if (btnGen.classList.contains("is-loading")) return;
+        btnGen.classList.add("is-loading");
+        btnGen.disabled = true;
+        btnGen.setAttribute("aria-busy", "true");
+        replayListAnimation();
+        window.setTimeout(function () {
+          btnGen.classList.remove("is-loading");
+          btnGen.disabled = false;
+          btnGen.setAttribute("aria-busy", "false");
+          btnGen.classList.remove("just-ran");
+          void btnGen.offsetWidth;
+          btnGen.classList.add("just-ran");
+        }, 1050);
+      });
+    })();
+  </script>
 </body>
 </html>
